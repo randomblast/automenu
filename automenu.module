@@ -1,0 +1,51 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_nodeapi().
+ * Fill in menu section values if user left them empty AND there's a parent
+ * menu item selected for this node type.
+ */
+function automenu_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  switch ($op) {
+    case 'submit':
+      $parent_menu = variable_get('parentmenu_'. $node->type, 0);
+      if ($parent_menu != 0) {
+        if (($node->menu['title'] == '') || ($node->menu['delete'])) {
+          $node->menu['title'] = $node->title;
+          $node->menu['pid'] = $parent_menu;
+          unset($node->menu['delete']);
+        }
+      }
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_form_alter().
+ * Add the "Default Parent Menu" section to content type edit node.
+ */
+function automenu_form_alter($form_id, &$form) {
+  if ($form_id == 'node_type_form' && isset($form['identity']['type'])) {
+    $form['workflow']['parentmenu'] = array(
+      '#type' => 'select',
+      '#title' => t('Default Parent Menu'),
+      '#default_value' => variable_get('parentmenu_'. $form['#node_type']->type, 0),
+      '#options' => _automenu_build_menu_opts()
+    );
+  }
+}
+
+/**
+ * Build the menu list to show in the content type edit form.
+ */
+function _automenu_build_menu_opts($pid=0, $indent='') {
+  $t = menu_get_menu();
+  $result = array($pid => $indent . $t['visible'][$pid]['title']);
+  if (isset($t['visible'][$pid]['children'])) {
+    foreach ($t['visible'][$pid]['children'] as $child) {
+      $result += _automenu_build_menu_opts($child, '--'. $indent);
+    }
+  }
+  return $result;
+}

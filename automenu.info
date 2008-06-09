@@ -1,0 +1,3 @@
+name = AutoMenu
+description = Automatically parents new nodes
+dependencies = menu
