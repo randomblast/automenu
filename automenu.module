@@ -4,14 +4,14 @@
 /**
  * Implementation of hook_nodeapi().
  * Fill in menu section values if user left them empty AND there's a parent
- * menu item selected for this node type.
+ * menu item selected for this node type AND the node is published
  */
 function automenu_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   switch ($op) {
     case 'submit':
       $parent_menu = variable_get('parentmenu_'. $node->type, 0);
       if ($parent_menu != 0) {
-        if (($node->menu['title'] == '') || ($node->menu['delete'])) {
+        if ((($node->menu['title'] == '') || ($node->menu['delete'])) && ($node->status == 1)) {
           $node->menu['title'] = $node->title;
           $node->menu['pid'] = $parent_menu;
           unset($node->menu['delete']);
