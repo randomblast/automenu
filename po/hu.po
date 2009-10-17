@@ -1,0 +1,20 @@
+# Hungarian translation of Auto Menu (5.x-1.1)
+# Copyright (c) 2009 by the Hungarian translation team
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Auto Menu (5.x-1.1)\n"
+"POT-Creation-Date: 2009-10-17 08:51+0000\n"
+"PO-Revision-Date: 2009-10-17 07:45+0000\n"
+"Language-Team: Hungarian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+
+msgid "Default Parent Menu"
+msgstr "Alapértelmezés szerinti szülő menü"
+msgid "AutoMenu"
+msgstr "AutoMenu"
+msgid "Automatically parents new nodes"
+msgstr "Automatikus szülő hozzáadás új tartalmakhoz"
