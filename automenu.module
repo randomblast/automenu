@@ -33,6 +33,12 @@ function automenu_form_alter($form_id, &$form) {
       '#default_value' => variable_get('parentmenu_'. $form['#node_type']->type, 0),
       '#options' => _automenu_build_menu_opts()
     );
+    $form['workflow']['menu_vocab'] = array(
+      '#type' => 'select',
+      '#title' => t('Vocabulary on which to base Submenu'),
+      '#default_value' => variable_get("menu_vocab_{$form['#node_type']->type}", 0),
+      '#options' => _automenu_vocab_opts($form['#node_type']),
+    );
   }
 }
 
@@ -40,6 +46,27 @@ function automenu_form_alter($form_id, &$form) {
  * Build the menu list to show in the content type edit form.
  */
 function _automenu_build_menu_opts($pid=0, $indent='') {
+
+/**
+ * Get a list of vocabularies we can base submenus off
+ *
+ * @param $type
+ */
+function _automenu_vocab_opts($type) {
+  $sql = db_query("
+    SELECT * FROM {vocabulary}
+    INNER JOIN {vocabulary_node_types} ON vocabulary.vid = vocabulary_node_types.vid
+    WHERE vocabulary_node_types.type = 'news'
+  ");
+
+  $opts = array(NULL => 'No Submenu');
+
+  while($vocab = db_fetch_object($sql))
+    $opts[$vocab->vid] = $vocab->name;
+
+  return $opts;
+}
+
   $t = menu_get_menu();
   $result = array($pid => $indent . $t['visible'][$pid]['title']);
   if (isset($t['visible'][$pid]['children'])) {
