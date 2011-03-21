@@ -120,4 +120,22 @@ function _automenu_parent_menu($node) {
   ))->mid;
 }
 
+/**
+ * Drush callback for automenu-rebuild
+ */
+function automenu_rebuild($type, $limit = NULL) {
+  // Find the nids of all nodes with the specified type.
+  $nodes = db_query("SELECT nid FROM {node} WHERE status = 1 AND type = '%s'", $type);
+
+  // Filter nodes down to only ones with no menu item
+  while(($limit === NULL || $limit) && ($nid = db_fetch_object($nodes)->nid)) {
+    if(db_fetch_object(db_query("SELECT COUNT(*) FROM menu WHERE path = '%s'", "node/{$nid}"))) {
+      $node = node_load($nid);
+      $limit--;
+
+      _automenu_insert_node($node);
+      node_save($node);
+    }
+  }
+  return 0;
 }
