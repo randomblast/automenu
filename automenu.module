@@ -89,6 +89,35 @@ function _automenu_vocab_opts($type) {
  * @returns The mid of the parent item
  */
 function _automenu_parent_menu($node) {
-  return variable_get('parentmenu_'. $node->type, 0);
+  // Get specified parent item, or die
+  $parent_mid = variable_get("parentmenu_{$node->type}", NULL);
+  if($parent_mid === NULL) return NULL;
+
+  // Get the term name of our chosen vocabulary
+  foreach($node->taxonomy as $node_term)
+    if($node_term->vid == variable_get("menu_vocab_{$node->type}", NULL))
+      $submenu_term = $node_term->name;
+
+  // No submenu
+  if(variable_get("menu_vocab_{$node->type}", NULL) == NULL || !isset($submenu_term))
+    return $parent_mid;
+
+  // Get currently defined submenus
+  $submenus = array();
+  $sql = db_query("SELECT * FROM {menu} WHERE pid = %d", $parent_mid);
+  while($submenu = db_fetch_object($sql))
+    $submenus[$submenu->mid] = $submenu;
+
+  // Submenu already exists
+  $pre_submenu = array_search($submenu_term, $submenus);
+  if($pre_submenu !== FALSE)
+    return $pre_submenu;
+
+  // Create new submenu and return the mid
+  db_query("INSERT INTO {menu}(pid, title, type) VALUES(%d, '%s', 118)", $parent_mid, $submenu_term);
+  return db_fetch_object(db_query(
+    "SELECT mid FROM {menu} WHERE pid = %d AND title = '%s' AND type = 118", $parent_mid, $submenu_term
+  ))->mid;
+}
 
 }
