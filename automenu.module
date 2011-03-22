@@ -129,10 +129,13 @@ function _automenu_parent_menu($node) {
     return $pre_submenu;
 
   // Create new submenu and return the mid
-  db_query("INSERT INTO {menu}(pid, title, type) VALUES(%d, '%s', 118)", $parent_mid, $submenu_term);
-  return db_fetch_object(db_query(
-    "SELECT mid FROM {menu} WHERE pid = %d AND title = '%s' AND type = 118", $parent_mid, $submenu_term
-  ))->mid;
+  $new_category_menu = array(
+    'pid' => $parent_mid,
+    'title' => $submenu_term,
+  );
+  menu_save_item($new_category_menu);
+
+  return $new_category_menu['mid'] ? $new_category_menu['mid']: $parent_mid;
 }
 
 /**
