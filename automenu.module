@@ -95,9 +95,22 @@ function _automenu_parent_menu($node) {
   if($parent_mid === NULL) return NULL;
 
   // Get the term name of our chosen vocabulary
-  foreach($node->taxonomy as $node_term)
-    if($node_term->vid == variable_get("menu_vocab_{$node->type}", NULL))
-      $submenu_term = $node_term->name;
+  foreach($node->taxonomy as $term_id => $node_term) {
+    /* For some reason we see 2 completely different versions of the taxonomy node property.
+     * We need to handle both, hence this gash. */
+
+    // Node being created
+    if(is_array($node_term)) {
+      if($term_id == variable_get("menu_vocab_{$node->type}", NULL))
+        $submenu_term = taxonomy_get_term(array_pop($node_term))->name;
+    }
+
+    // Node being altered
+    else if(is_object($node_term)) {
+      if($node_term->vid == variable_get("menu_vocab_{$node->type}", NULL))
+        $submenu_term = $node_term->name;
+    }
+  }
 
   // No submenu
   if(variable_get("menu_vocab_{$node->type}", NULL) == NULL || !isset($submenu_term))
