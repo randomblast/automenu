@@ -49,6 +49,15 @@ function _automenu_insert_node(&$node) {
  * Build the menu list to show in the content type edit form.
  */
 function _automenu_build_menu_opts($pid=0, $indent='') {
+  $t = menu_get_menu();
+  $result = array($pid => $indent . $t['visible'][$pid]['title']);
+  if (isset($t['visible'][$pid]['children'])) {
+    foreach ($t['visible'][$pid]['children'] as $child) {
+      $result += _automenu_build_menu_opts($child, '--'. $indent);
+    }
+  }
+  return $result;
+}
 
 /**
  * Get a list of vocabularies we can base submenus off
@@ -68,16 +77,6 @@ function _automenu_vocab_opts($type) {
     $opts[$vocab->vid] = $vocab->name;
 
   return $opts;
-}
-
-  $t = menu_get_menu();
-  $result = array($pid => $indent . $t['visible'][$pid]['title']);
-  if (isset($t['visible'][$pid]['children'])) {
-    foreach ($t['visible'][$pid]['children'] as $child) {
-      $result += _automenu_build_menu_opts($child, '--'. $indent);
-    }
-  }
-  return $result;
 }
 
 /**
