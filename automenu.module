@@ -132,6 +132,7 @@ function _automenu_parent_menu($node) {
   $new_category_menu = array(
     'pid' => $parent_mid,
     'title' => $submenu_term,
+    'type' => 118,
   );
   menu_save_item($new_category_menu);
 
