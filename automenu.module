@@ -121,7 +121,7 @@ function _automenu_parent_menu($node) {
   $submenus = array();
   $sql = db_query("SELECT * FROM {menu} WHERE pid = %d", $parent_mid);
   while($submenu = db_fetch_object($sql))
-    $submenus[$submenu->mid] = $submenu;
+    $submenus[$submenu->mid] = $submenu->title;
 
   // Submenu already exists
   $pre_submenu = array_search($submenu_term, $submenus);
