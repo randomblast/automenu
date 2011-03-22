@@ -113,8 +113,9 @@ function _automenu_parent_menu($node) {
   }
 
   // No submenu
-  if(variable_get("menu_vocab_{$node->type}", NULL) == NULL || !isset($submenu_term))
+  if(variable_get("menu_vocab_{$node->type}", NULL) == NULL || !$submenu_term) {
     return $parent_mid;
+  }
 
   // Get currently defined submenus
   $submenus = array();
