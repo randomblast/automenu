@@ -143,7 +143,7 @@ function automenu_rebuild($type, $limit = NULL) {
 
   // Filter nodes down to only ones with no menu item
   while(($limit === NULL || $limit) && ($nid = db_fetch_object($nodes)->nid)) {
-    if(db_fetch_object(db_query("SELECT COUNT(*) FROM menu WHERE path = '%s'", "node/{$nid}"))) {
+    if(!db_fetch_object(db_query("SELECT COUNT(*) AS n FROM menu WHERE path = '%s'", "node/{$nid}"))->n) {
       $node = node_load($nid);
       $limit--;
 
