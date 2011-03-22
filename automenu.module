@@ -152,7 +152,8 @@ function automenu_rebuild($type, $limit = NULL) {
       $limit--;
 
       _automenu_insert_node($node);
-      node_save($node);
+      $node->menu['path'] = "node/{$node->nid}";
+      menu_save_item($node->menu);
     }
   }
   menu_rebuild();
