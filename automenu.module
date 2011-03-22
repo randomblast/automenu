@@ -35,7 +35,8 @@ function automenu_form_alter($form_id, &$form) {
  */
 function _automenu_insert_node(&$node) {
   $parent_menu = _automenu_parent_menu($node);
-  if ($parent_menu != 0) {
+  echo "Node: {$node->title}\tParent: $parent_menu\n";
+  if ($parent_menu) {
     if ((($node->menu['title'] == '') || ($node->menu['delete'])) && ($node->status == 1)) {
       $node->menu['title'] = $node->title;
       $node->menu['pid'] = $parent_menu;
