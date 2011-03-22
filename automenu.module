@@ -40,7 +40,7 @@ function _automenu_insert_node(&$node) {
     if ((($node->menu['title'] == '') || ($node->menu['delete'])) && ($node->status == 1)) {
       $node->menu['title'] = $node->title;
       $node->menu['pid'] = $parent_menu;
-      $node->menu['type'] = 118;
+      $node->menu['type'] = 100;
       unset($node->menu['delete']);
     }
   }
