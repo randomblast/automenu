@@ -152,5 +152,5 @@ function automenu_rebuild($type, $limit = NULL) {
       node_save($node);
     }
   }
-  return 0;
+  menu_rebuild();
 }
